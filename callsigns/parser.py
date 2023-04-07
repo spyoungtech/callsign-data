@@ -168,7 +168,8 @@ class LicenseRecord(typing.NamedTuple):
     def format(self) -> str:
         pattern = r'([A-Z]+)\d([A-Z]+)'
         match = re.match(pattern, self.call_sign)
-        assert match
+        if not match:
+            return ''
         prefix, suffix = match.groups()
         return f'{len(prefix)}x{len(suffix)}'
 
