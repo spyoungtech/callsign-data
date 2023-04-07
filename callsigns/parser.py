@@ -72,6 +72,7 @@ def to_license_records(raw_records: dict[str, dict[str, dict[str, Any]]]) -> dic
         street_address = record_data['EN']['Street Address']
         attn_line = record_data['EN']['Attention Line']
         city = record_data['EN']['City']
+        state = record_data['EN']['State']
         zip_code = record_data['EN']['Zip Code']
         po_box = record_data['EN']['PO Box']
         grant_date = record_data['HD']['Grant Date']
@@ -97,6 +98,7 @@ def to_license_records(raw_records: dict[str, dict[str, dict[str, Any]]]) -> dic
             street_address=street_address,
             attn_line=attn_line,
             city=city,
+            state=state,
             zip_code=zip_code,
             po_box=po_box,
             grant_date=grant_date,
@@ -137,6 +139,7 @@ class LicenseRecord(typing.NamedTuple):
     street_address: str | None
     attn_line: str | None
     city: str | None
+    state: str | None
     zip_code: str | None
     po_box: str | None
     grant_date: str | None
@@ -206,6 +209,7 @@ class LicenseRecord(typing.NamedTuple):
             'street_address': self.street_address,
             'attn_line': self.attn_line,
             'city': self.city,
+            'state': self.state,
             'zip_code': self.zip_code,
             'po_box': self.po_box,
             'grant_date': self.grant_date,
