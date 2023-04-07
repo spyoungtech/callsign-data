@@ -18,17 +18,20 @@ jobs:
        uses: actions/setup-python@v2
        with:
          python-version: "3.10"
-     - name: configure aws credentials
-       uses: aws-actions/configure-aws-credentials@v2
-       with:
-         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/callsigns-upload-role
-         aws-region: us-east-1
      - name: build
        env:
          PYTHONUNBUFFERED: "1"
        run: |
          python -m pip install -r requirements.txt
          python -m callsigns.builder
+
+     - name: configure aws credentials
+       uses: aws-actions/configure-aws-credentials@v2
+       with:
+         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/callsigns-upload-role
+         aws-region: us-east-1
+         role-duration-seconds: 21000
+
      - name: upload
        env:
          UPLOAD_BUCKET: ${{ secrets.UPLOAD_BUCKET }}
