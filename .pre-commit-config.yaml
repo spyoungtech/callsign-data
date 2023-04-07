@@ -28,12 +28,13 @@ repos:
     -   id: mypy
         args:
             - "--strict"
-        exclude: ^(tests/.*|setup\.py|\.build\.py|\.unasync-rewrite\.py|_tests_setup\.py|buildunasync\.py)
+        exclude: ^(tests/.*|setup\.py)
         additional_dependencies:
-          - jinja2
+          - types-requests
+          - types-python-dateutil
 
 -   repo: https://github.com/pycqa/flake8
-    rev: '6.0.0'  # pick a git hash / tag to point to
+    rev: '6.0.0'
     hooks:
     -   id: flake8
         args:
