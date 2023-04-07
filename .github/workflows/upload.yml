@@ -1,0 +1,32 @@
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 15 * * *"
+
+jobs:
+  upload:
+    runs-on: macos-latest
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v3
+
+     - name: setup python
+       uses: actions/setup-python@v2
+       with:
+         python-version: 3.10
+     - name: configure aws credentials
+       uses: aws-actions/configure-aws-credentials@v2
+       with:
+         role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/callsigns-upload-role
+         aws-region: us-east-1
+     - name: build
+       run: |
+         python -m pip install -r requirements.txt
+         python -m callsigns.builder
+     - name: upload
+       env:
+         UPLOAD_BUCKET: ${{ secrets.UPLOAD_BUCKET }}
+         DISTRIBUTION_ID: ${{ secrets.DISTRIBUTION_ID }}
+       run: |
+         aws s3 cp --recursive _build "s3://${UPLOAD_BUCKET}"
+         aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths '/callsigns/*'
