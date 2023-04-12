@@ -37,7 +37,7 @@ jobs:
          UPLOAD_BUCKET: ${{ secrets.UPLOAD_BUCKET }}
          DISTRIBUTION_ID: ${{ secrets.DISTRIBUTION_ID }}
        run: |
-         expiration="$(date -u -v+1d5h +"%Y-%m-%dT%H:00:00Z")"
+         expiration="$(date -u -v+1d -v+5H +"%Y-%m-%dT%H:00:00Z")"
          echo $expiration
          aws s3 cp --quiet --recursive --expires="${expiration}" _build "s3://${UPLOAD_BUCKET}"
          aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths '/callsigns/*'
