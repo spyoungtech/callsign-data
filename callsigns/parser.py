@@ -229,4 +229,6 @@ class LicenseRecord(typing.NamedTuple):
             'format': self.format,
             'phonetic': self.phonetic,
             'syllable_length': self.syllable_length,
+            'fcc_uls_link': self.fcc_uls_link,
+            'qrz_call_sign_link': self.qrz_call_sign_link,
         }
