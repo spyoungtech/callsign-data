@@ -18,7 +18,7 @@ from .fetcher import _get_data_dir_date
 
 def parse_file(filename: str | pathlib.Path, field_names: list[str]) -> list[dict[str, Any]]:
     with open(filename) as f:
-        reader = csv.DictReader(f, fieldnames=field_names, delimiter='|')
+        reader = csv.DictReader(f, fieldnames=field_names, delimiter='|', quoting=csv.QUOTE_NONE)
         rows = list(reader)
     return rows
 
