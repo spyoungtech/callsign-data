@@ -13,6 +13,8 @@ from .constants import FCC_HD_FIELD_NAMES
 from .constants import MORSE_TABLE
 from .constants import PHONETIC_WORDS
 from .constants import SYLLABLE_LENGTHS
+from .constants import LICENSE_STATUS_CODES
+from .constants import OPERATOR_CLASS_CODES
 from .fetcher import _get_data_dir_date
 
 
@@ -64,7 +66,7 @@ def to_license_records(raw_records: dict[str, dict[str, dict[str, Any]]]) -> dic
     license_records: dict[str, LicenseRecord] = {}
     for usi, record_data in raw_records.items():
         call_sign = record_data['HD']['Call Sign']
-        status = record_data['HD']['License Status']
+        status = LICENSE_STATUS_CODES[record_data['HD']['License Status']]
         frn = record_data['EN']['FCC Registration Number (FRN)']
         first_name = record_data['EN']['First Name']
         middle_initial = record_data['EN']['MI']
@@ -79,6 +81,8 @@ def to_license_records(raw_records: dict[str, dict[str, dict[str, Any]]]) -> dic
         expired_date = record_data['HD']['Expired Date']
         cancellation_date = record_data['HD']['Cancellation Date']
         operator_class = record_data['AM']['Operator Class'] if 'AM' in record_data else ''
+        if (operator_class is not None) and (operator_class != '') and (operator_class != ' '):
+            operator_class = OPERATOR_CLASS_CODES[operator_class]
         group_code = record_data['AM']['Group Code'] if 'AM' in record_data else ''
         trustee_call_sign = record_data['AM']['Trustee Call Sign'] if 'AM' in record_data else ''
         trustee_name = record_data['AM']['Trustee Name'] if 'AM' in record_data else ''
