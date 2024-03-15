@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 from callsigns.fetcher import fetch_and_extract_all
 from callsigns.parser import parse_all_raw
@@ -18,7 +19,15 @@ def build(rootdir: str = '_build') -> None:
     if not os.path.exists(callsign_dir):
         os.mkdir(callsign_dir)
     for callsign, records in call_sign_records.items():
-        fp = os.path.join(callsign_dir, f'{callsign}.json')
+        pattern = r'([A-Z]+)(\d)[A-Z]+'
+        match = re.match(pattern, callsign)
+        if not match:
+            continue
+        call_prefix, region_num = match.groups()
+        callsign_subdir = os.path.join(callsign_dir, region_num, call_prefix)
+        if not os.path.exists(callsign_subdir):
+            os.makedirs(callsign_subdir)
+        fp = os.path.join(callsign_subdir, f'{callsign}.json')
         formatted = [r.as_dict() for r in records]
         with open(fp, 'w') as f:
             json.dump(formatted, f)

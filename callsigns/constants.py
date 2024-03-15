@@ -240,6 +240,28 @@ FCC_EN_FIELD_NAMES = [
     'Linked Call Sign',
 ]
 
+# REF: https://www.fcc.gov/wireless/data/public-access-files-database-downloads
+#      File: ULS Code Definitions, currently https://www.fcc.gov/sites/default/files/uls_code_definitions_20240215.txt
+
+LICENSE_STATUS_CODES = {
+    'A' : 'Active',
+    'C' : 'Canceled',
+    'E' : 'Expired',
+    'L' : 'Pending Legal Status',
+    'P' : 'Parent Station Canceled',
+    'T' : 'Terminated',
+    'X' : 'Term Pending',
+}
+
+OPERATOR_CLASS_CODES = {
+    'A' : 'Advanced',
+    'E' : 'Amateur Extra',
+    'G' : 'General',
+    'N' : 'Novice',
+    'P' : 'Technician Plus',
+    'T' : 'Technician',
+}
+
 UNAVAILABLE_PATTERNS = [
     # REF: "Call Sign Choices Not Available" http://www.arrl.org/vanity-call-signs
     # 1.KA2AA-KA9ZZ, KC4AAA-KC4AAF, KC4USA-KC4USZ, KG4AA-KG4ZZ, KC6AA-KC6ZZ, KL9KAA- KL9KHZ, KX6AA-KX6ZZ;
