@@ -39,5 +39,4 @@ jobs:
        env:
          DISTRIBUTION_ID: ${{ secrets.DISTRIBUTION_ID }}
        run: |
-         aws s3 cp --quiet --recursive _build "s3://${UPLOAD_BUCKET}"
          aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths '/*'
