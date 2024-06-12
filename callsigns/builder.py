@@ -225,7 +225,7 @@ def main() -> None:
             print('uploading error logs')
             _upload_error_logs(args.bucket, uploader.upload_errors)
     print('Updating remote hashes')
-    if args.bucket and not args.dryrun:
+    if args.bucket and not args.dry_run:
         _update_hashes_to_remote(hashfile, args.bucket)
     print('Done')
 
