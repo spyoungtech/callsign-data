@@ -244,22 +244,22 @@ FCC_EN_FIELD_NAMES = [
 #      File: ULS Code Definitions, currently https://www.fcc.gov/sites/default/files/uls_code_definitions_20240215.txt
 
 LICENSE_STATUS_CODES = {
-    'A' : 'Active',
-    'C' : 'Canceled',
-    'E' : 'Expired',
-    'L' : 'Pending Legal Status',
-    'P' : 'Parent Station Canceled',
-    'T' : 'Terminated',
-    'X' : 'Term Pending',
+    'A': 'Active',
+    'C': 'Canceled',
+    'E': 'Expired',
+    'L': 'Pending Legal Status',
+    'P': 'Parent Station Canceled',
+    'T': 'Terminated',
+    'X': 'Term Pending',
 }
 
 OPERATOR_CLASS_CODES = {
-    'A' : 'Advanced',
-    'E' : 'Amateur Extra',
-    'G' : 'General',
-    'N' : 'Novice',
-    'P' : 'Technician Plus',
-    'T' : 'Technician',
+    'A': 'Advanced',
+    'E': 'Amateur Extra',
+    'G': 'General',
+    'N': 'Novice',
+    'P': 'Technician Plus',
+    'T': 'Technician',
 }
 
 UNAVAILABLE_PATTERNS = [

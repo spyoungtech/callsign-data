@@ -6,15 +6,16 @@ import pathlib
 import re
 import typing
 from typing import Any
+from typing import Self
 
 from .constants import FCC_AM_FIELD_NAMES
 from .constants import FCC_EN_FIELD_NAMES
 from .constants import FCC_HD_FIELD_NAMES
+from .constants import LICENSE_STATUS_CODES
 from .constants import MORSE_TABLE
+from .constants import OPERATOR_CLASS_CODES
 from .constants import PHONETIC_WORDS
 from .constants import SYLLABLE_LENGTHS
-from .constants import LICENSE_STATUS_CODES
-from .constants import OPERATOR_CLASS_CODES
 from .fetcher import _get_data_dir_date
 
 
@@ -81,7 +82,7 @@ def to_license_records(raw_records: dict[str, dict[str, dict[str, Any]]]) -> dic
         expired_date = record_data['HD']['Expired Date']
         cancellation_date = record_data['HD']['Cancellation Date']
         operator_class = record_data['AM']['Operator Class'] if 'AM' in record_data else ''
-        if (operator_class is not None) and (operator_class != '') and (operator_class != ' '):
+        if operator_class in OPERATOR_CLASS_CODES:
             operator_class = OPERATOR_CLASS_CODES[operator_class]
         group_code = record_data['AM']['Group Code'] if 'AM' in record_data else ''
         trustee_call_sign = record_data['AM']['Trustee Call Sign'] if 'AM' in record_data else ''
@@ -94,7 +95,6 @@ def to_license_records(raw_records: dict[str, dict[str, dict[str, Any]]]) -> dic
             call_sign=call_sign,
             status=status,
             frn=frn,
-            raw=record_data,
             system_identifier=usi,
             first_name=first_name,
             middle_initial=middle_initial,
@@ -157,7 +157,6 @@ class LicenseRecord(typing.NamedTuple):
     region_code: str | None
     vanity: str | None
     systematic: str | None
-    raw: dict[str, Any]
 
     @property
     def call_sign_morse(self) -> str:
@@ -201,8 +200,8 @@ class LicenseRecord(typing.NamedTuple):
     def qrz_call_sign_link(self) -> str:
         return f'https://www.qrz.com/db/{self.call_sign}'
 
-    def as_dict(self) -> dict[str, str | int | None]:
-        return {
+    def as_dict(self, include_synthetic: bool = False) -> dict[str, str | int | None]:
+        d: dict[str, str | int | None] = {
             'call_sign': self.call_sign,
             'status': self.status,
             'frn': self.frn,
@@ -227,12 +226,47 @@ class LicenseRecord(typing.NamedTuple):
             'region_code': self.region_code,
             'vanity': self.vanity,
             'systematic': self.systematic,
-            'call_sign_morse': self.call_sign_morse,
-            'morse_dits': self.morse_dits,
-            'morse_dahs': self.morse_dahs,
-            'format': self.format,
-            'phonetic': self.phonetic,
-            'syllable_length': self.syllable_length,
-            'fcc_uls_link': self.fcc_uls_link,
-            'qrz_call_sign_link': self.qrz_call_sign_link,
         }
+        if include_synthetic:
+            d.update(
+                {
+                    'call_sign_morse': self.call_sign_morse,
+                    'morse_dits': self.morse_dits,
+                    'morse_dahs': self.morse_dahs,
+                    'format': self.format,
+                    'phonetic': self.phonetic,
+                    'syllable_length': self.syllable_length,
+                    'fcc_uls_link': self.fcc_uls_link,
+                    'qrz_call_sign_link': self.qrz_call_sign_link,
+                }
+            )
+        return d
+
+    @classmethod
+    def from_dict(cls, d: dict[str, Any]) -> Self:
+        return cls(
+            call_sign=d.get('call_sign'),  # type: ignore[arg-type]
+            status=d.get('status'),  # type: ignore[arg-type]
+            frn=d.get('frn'),
+            system_identifier=d.get('system_identifier'),  # type: ignore[arg-type]
+            first_name=d.get('first_name'),
+            middle_initial=d.get('middle_initial'),
+            last_name=d.get('last_name'),
+            street_address=d.get('street_address'),
+            attn_line=d.get('attn_line'),
+            city=d.get('city'),
+            state=d.get('state'),
+            zip_code=d.get('zip_code'),
+            po_box=d.get('po_box'),
+            grant_date=d.get('grant_date'),
+            expired_date=d.get('expired_date'),
+            cancellation_date=d.get('cancellation_date'),
+            operator_class=d.get('operator_class'),
+            group_code=d.get('group_code'),
+            trustee_call_sign=d.get('trustee_call_sign'),
+            trustee_name=d.get('trustee_name'),
+            previous_call_sign=d.get('previous_call_sign'),
+            region_code=d.get('region_code'),
+            vanity=d.get('vanity'),
+            systematic=d.get('systematic'),
+        )

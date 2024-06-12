@@ -14,17 +14,6 @@ jobs:
      - name: Checkout
        uses: actions/checkout@v3
 
-     - name: setup python
-       uses: actions/setup-python@v2
-       with:
-         python-version: "3.10"
-     - name: build
-       env:
-         PYTHONUNBUFFERED: "1"
-       run: |
-         python -m pip install -r requirements.txt
-         python -m callsigns.builder
-
      - name: configure aws credentials
        uses: aws-actions/configure-aws-credentials@v2
        with:
@@ -32,12 +21,23 @@ jobs:
          aws-region: us-east-1
          role-duration-seconds: 21000
 
-     - name: upload
+     - name: setup python
+       uses: actions/setup-python@v2
+       with:
+         python-version: "3.12"
+     - name: build
        env:
          UPLOAD_BUCKET: ${{ secrets.UPLOAD_BUCKET }}
+         PYTHONUNBUFFERED: "1"
+       run: |
+         python -m pip install -r requirements.txt
+         python -m callsigns.builder --upload-bucket="${UPLOAD_BUCKET}"
+
+
+
+     - name: cachebust
+       env:
          DISTRIBUTION_ID: ${{ secrets.DISTRIBUTION_ID }}
        run: |
-         expiration="$(date -u -v+1d -v+5H +"%Y-%m-%dT%H:00:00Z")"
-         echo $expiration
-         aws s3 cp --quiet --recursive --expires="${expiration}" _build "s3://${UPLOAD_BUCKET}"
-         aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths '/callsigns/*'
+         aws s3 cp --quiet --recursive _build "s3://${UPLOAD_BUCKET}"
+         aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths '/*'
