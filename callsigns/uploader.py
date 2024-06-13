@@ -12,10 +12,10 @@ class STOP:
 
 class Uploader:
     def __init__(
-        self, rootdir: str, bucket_name: str, num_workers: int = 3, _dry_run: bool = False, quiet: int = 0
+        self, rootdir: str, bucket_name: str, num_workers: int = 32, _dry_run: bool = False, quiet: int = 0
     ) -> None:
         self.rootdir: str = rootdir
-        self.queue: queue.Queue[str | Type[STOP]] = queue.Queue()
+        self.queue: queue.Queue[str | Type[STOP]] = queue.Queue(maxsize=num_workers * 4)
         self._dry_run = _dry_run
         self.bucket_name = bucket_name
         self.num_workers = num_workers

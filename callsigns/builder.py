@@ -115,10 +115,9 @@ def build(
         else:
             exists = False
 
-        out_text = json.dumps(formatted, separators=(',', ':'))
         if not dry_run:
             with open(fp, 'wb') as f:
-                f.write(out_text.encode('utf-8'))
+                f.write(out_bytes)
         if exists:
             changed += 1
         else:
@@ -132,7 +131,7 @@ def build(
         with open(hash_file, 'w', encoding='utf-8') as hfile:
             json.dump(hashdata, hfile, separators=(',', ':'))
     if quiet < 2:
-        print(f'{num_records} records processed. {skipped=} {changed=} {new=}')
+        print(f'{num_records} records processed. {skipped=} {changed=} {new=} synced={to_sync}')
 
     # return to_upload, hash_file
 
