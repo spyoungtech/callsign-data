@@ -131,7 +131,7 @@ def build(
         with open(hash_file, 'w', encoding='utf-8') as hfile:
             json.dump(hashdata, hfile, separators=(',', ':'))
     if quiet < 2:
-        print(f'{num_records} records processed. {skipped=} {changed=} {new=} synced={to_sync}')
+        print(f'{num_records} records processed. {skipped=} {changed=} {new=} synced={to_sync}           ')
 
     # return to_upload, hash_file
 
@@ -193,7 +193,12 @@ def main() -> None:
 
     hashfile = os.path.join(args.rootdir, 'hashes.json')
     if args.bucket and not args.dry_run:
+        print('retrieving remote hashes...')
         remote_hashes = _get_remote_hashes(args.bucket)
+        if remote_hashes:
+            print('done', len(remote_hashes), 'received')
+        else:
+            print('could not retrieve remote hashes')
     else:
         remote_hashes = None
     import logging
